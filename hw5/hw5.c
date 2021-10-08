@@ -34,13 +34,16 @@ void thread(void *givenName) {
         long double x = part * i;
         ans += part * sqrt(1 - x * x);
     }
-    score[id] = ans;
+    score[id] += ans;
 }
 
 int main(int argc, char **argv) {
     numCPU = sysconf( _SC_NPROCESSORS_ONLN );
-
+    
+    if(argc > 1) digi = atoi(argv[1]);
+    
     long double up = 1, low = 0, tolerant = pow(10, -(digi + 1));
+    int count = 1;
     while(up - low >= tolerant * 4){
         up = 1;
         low = 0;
@@ -57,10 +60,11 @@ int main(int argc, char **argv) {
             low += score[i];
 
         up = low + (long double)1 / loopCount;
-        long double ans = (up + low) * 2; //(up + low) / 2 * 4
+        long double ans = (up + low) * 2 / count; //(up + low) / 2 * 4
     	printf("pi = %.16LF\n", ans);
 
         loopCount += 1000000000;
+        count++;
     }
     return 0;
 }
